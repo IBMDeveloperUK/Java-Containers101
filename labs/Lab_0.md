@@ -1,9 +1,9 @@
 # Lab 0: Prerequisites
 
 To run the labs, there are several requirements:
-1. [Docker]()
-2. [kubectl]()
-3. [Minikube]()
+1. [Docker](#install-docker)
+2. [kubectl](#install-kubectl)
+3. [Minikube](#install-minikube)
 
 ## Install Docker
 
