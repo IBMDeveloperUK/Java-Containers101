@@ -25,7 +25,7 @@ For Mac users install [Docker Toolbox for Mac](https://docs.docker.com/toolbox/t
 
 Once the install is complete, open VirtualBox and update to the latest version (This may require you to download another executable or image file, but is necessary to resolve issues related to running Minikube as detailed below).
 
-## Verifying Install
+### Verifying Install
 
 Open your chosen terminal or the Docker Quick Start Terminal and run the following command to verify a successful install:
 
@@ -95,7 +95,7 @@ Install with [Chocolatey](https://chocolatey.org/):
 choco install kubernetes-cli
 ```
 
-## Verifying Installation 
+### Verifying Installation 
 Verify your install by ensuring you can get the kubectl version:
 
 ```shell
