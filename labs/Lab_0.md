@@ -1,11 +1,12 @@
 # Lab 0: Prerequisites
 
 To run the labs, there are several requirements:
-1. [Docker](#install-docker)
-2. [kubectl](#install-kubectl)
-3. [Minikube](#install-minikube)
+1. [Install Docker](#install-docker)
+2. [Install kubectl](#install-kubectl)
+3. [Install Minikube](#install-minikube)
+4. [Configure your Minikube cluster with kubectl](#configuring-a-minikube-cluster-with-kubectl)
 
-## Install Docker
+## 1. Install Docker
 
 Before you start running any of the exercises, make sure you have downloaded the appropriate version of [Docker](https://docs.docker.com/get-started/) for your OS. Docker is the underlying container engine that we will use to deploy our Java containers providing a comprehensive ecosystem around manipulating containers (run, commit, start, stop, delete, pull, push). We could have used Docker alone but with some of the labs we want to cover in the workshop, it would quickly become unclear and untidy.  
 
@@ -49,7 +50,7 @@ sudo usermod -aG docker $USER
 
 On mac 
 
-## Install kubectl
+## 2. Install kubectl
 
 As we will be using Minikube to deploy our containers, we will need the [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl). It's purpose is to interact with the Kubernetes API which will be responsible for creating our kubernetes PODs (which in most cases translates to a Docker container) within our Minikube cluster. This will allow us to define our config for our containers in YAML rather than through multi-line Docker run commands which becomes quite cumbersome.
 
@@ -102,7 +103,7 @@ Verify your install by ensuring you can get the kubectl version:
 kubectl version
 ``` 
 
-## Install Minikube
+## 3. Install Minikube
 
 Once you have successfully installed kubectl, you will now need to install [Minikube](https://github.com/kubernetes/minikube). This will deploy a single node instance of Kubernetes on our machines and will enable us to have more granular control over how to run our containers. 
 
@@ -130,7 +131,7 @@ choco install minikube
 
 Install manually: Download the [minikube-windows-amd64.exe](https://storage.googleapis.com/minikube/releases/latest/minikube-windows-amd64.exe) file, rename it to `minikube.exe` and add it to your path.
 
-## Configuring a Minikube cluster with kubectl
+## 4. Configuring a Minikube cluster with kubectl
 
 We now have Docker on our local machine either in the form of Docker Toolbox or Docker CE along with kubectl and minikube. Now we want to set up a minikube cluster. Minikube will configure all the services to have a working Kubernetes environment for a single node and kubectl will allow us to interact with the cluster from our machine. The difference between Docker Toolbox and Docker CE is that the cluster and all the containers will be provisioned within a VM that VirtualBox will manage, whereas Docker CE will deploy everything directly on the machine. The kubectl tool will allow us to interact directly with the cluster in both cases directly from our machine so post-installation, the experience will be exactly the same.
 
