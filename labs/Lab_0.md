@@ -1,10 +1,10 @@
 # Lab 0: Prerequisites
 
 To run the labs, there are several requirements:
-1. [Install Docker](#install-docker)
-2. [Install kubectl](#install-kubectl)
-3. [Install Minikube](#install-minikube)
-4. [Configure your Minikube cluster with kubectl](#configuring-a-minikube-cluster-with-kubectl)
+1. [Install Docker](#1-install-docker)
+2. [Install kubectl](#2-install-kubectl)
+3. [Install Minikube](#3-install-minikube)
+4. [Configure your Minikube cluster with kubectl](#4-configuring-a-minikube-cluster-with-kubectl)
 
 ## 1. Install Docker
 
