@@ -44,11 +44,9 @@ sudo groupadd docker
 
 Add your user to the `docker` group:
 
-sudo usermod -aG docker $USER
 ```shell
+sudo usermod -aG docker $USER
 ```
-
-On mac 
 
 ## 2. Install kubectl
 
