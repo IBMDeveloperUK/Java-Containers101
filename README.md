@@ -8,5 +8,5 @@ Now that you have a bit more understanding around the challenges of running Java
 
 1. [Lab 0: Prerequisites](./labs/Lab_0.md)
 2. [Lab 1: Choosing the right base image](./labs/Lab_1.md)
-3. [Lab 2: ](./labs/Lab_2.md)
-4. [Lab 3: ](./labs/Lab_3.md)
+3. [Lab 2: Fine-tuning Java images](./labs/Lab_2.md)
+4. [Lab 3: Setting container resource constraints](./labs/Lab_3.md)
