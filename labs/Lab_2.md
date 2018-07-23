@@ -39,20 +39,29 @@ Next, make sure that you are in the `java-containers101/docker` directory. To ha
 
 On Linux/Mac using zsh:
 
-```
-time (repeat 10 {java -Xshare:off -jar java-containers101-1.0-SNAPSHOT.jar --exit})
+```bash
+time (repeat 10 {
+      java -Xshare:off \
+           -jar java-containers101-1.0-SNAPSHOT.jar --exit
+})
 ```
 
 Or on Linux/Mac using bash:
 
-```
-time for i in {1..10}; do java -Xshare:off -jar java-containers101-1.0-SNAPSHOT.jar --exit; done
+```bash
+time for i in {1..10}; do \
+      java -Xshare:off \
+           -jar java-containers101-1.0-SNAPSHOT.jar --exit; \
+done
 ```
 
 Or on Windows using PowerShell:
 
-```
-Measure-Command { foreach ($j in 1..10) {java -Xshare:off -jar java-containers101-1.0-SNAPSHOT.jar --exit}}
+```bash
+Measure-Command { foreach ($j in 1..10) {
+      java -Xshare:off \
+           -jar java-containers101-1.0-SNAPSHOT.jar --exit \
+}}
 ```
 
 The `--exit` flag is used to shutdown the application as soon as it has finished start-ing up so we don't hang in an interactive shell. This allows us to repeatedly call the application
