@@ -76,3 +76,5 @@ Again, on your browser go to:
 `localhost:8080/ping`
 
 So from the assumption of just running our Java applications, there is no need to have such a big distribution. In fact in the Serverless world, Java applications are pretty much ignored as a use case because of the large overhead. For now, Java 8 JRE alpine remains a very attractive distribution but we have to remember that this will eventually lose support. 
+
+Congratulations, you have completed Lab 1! Feel free to go [back to the menu](../README.md) to choose another lab.
