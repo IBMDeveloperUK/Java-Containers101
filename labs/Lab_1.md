@@ -69,7 +69,7 @@ Now lets test to see how the other image performs. To exit the container press t
 
 Now let's run the smaller version of the application:
 
-adocker run -p 8080:8080 --rm java-container:openjdk-8-jre-alpine`
+`docker run -p 8080:8080 --rm java-container:openjdk-8-jre-alpine`
 
 Again, on your browser go to:
 
