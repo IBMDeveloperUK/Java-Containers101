@@ -105,7 +105,7 @@ Looking at the results, you may have found that it is not conclusive that CDS is
 
 ## Application CDS 
 
-Application CDS is exactly what it suggests: it allows us to have Class Data Sharing for our external libraries. Unlike CDS however, Application CDS is only implemented in JDK 10 and above. Similar to before, there are more saving to be won the more application classes are being used and more memory savings as there are more containers sharing the same cache. 
+Application CDS is exactly what it suggests: it allows us to have Class Data Sharing for our external libraries. Unlike CDS however, Application CDS was only available commercially up until JDK 10 (which is why we had install openJDK 10 to play with this feature). Similar to before, there are more saving to be won the more application classes are being used and more memory savings as there are more containers sharing the same cache. 
 
 ### Creating the shared archive 
 
