@@ -49,7 +49,7 @@ On Mac or Linux, you can then update your profile (which can be any of the follo
 On Mac you would add:
 
 ```
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-10.0.2.jdk/Contents/Home
 export PATH=$JAVA_HOME/bin/:$PATH
 ```
 
