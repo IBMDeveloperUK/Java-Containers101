@@ -78,3 +78,5 @@ openjdk 10.0.2 2018-07-17
 OpenJDK Runtime Environment 18.3 (build 10.0.2+13)
 OpenJDK 64-Bit Server VM 18.3 (build 10.0.2+13, mixed mode)
 ```
+
+Now you have all the prerequisites you can go back to the [menu](../README.md) and start a lab!
