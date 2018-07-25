@@ -22,22 +22,59 @@ Docker CE is only compatible with Microsoft Windows 10 Professional or Enterpris
 
 As we will be playing around with some of the newer features only available in the more recent versions of Java, we will be using openJDK 10. If you don't already have this installed, you can install the [openJDK 10](http://jdk.java.net/10/) binaries  from the Oracle Website.
 
-### Configuring Java 10
+### Configuring Java 10:
 
-## Mac
+Once you have installed the binary file, you can extract the contents to a sensible directory (probably where you have other Java versions installed):
 
-Once you have installed the binary file, you can extract the contents in the JVM directory, e.g.
+On Mac:
 
 ```
 /Library/Java/JavaVirtualMachines/jdk-10.0.2.jdk
 ```
 
-Then you can use the `java_home` tool to let your machine use this version of Java instead of your current version. (You can use this same tool to switch back):
+or on Linux:
 
 ```
-/usr/libexec/java_home -v 10.0.2
+/usr/lib/jvm/jdk-10.0.2.jdk
 ```
 
-The output should confirm that you are now using this new version of Java.
+or on Windows:
 
+```
+C:\Program Files\Java\jdk-10.0.2.jdk
+```
 
+On Mac or Linux, you can then update your profile (which can be any of the following files depending on your shell: `~/.bashrc`, `~/.bash_profile`, `~/.zshrc`). This will ensure that every time you open a new shell, you will be ready to use this version of Java. Alternatively, you can run these commands directly in the shell. Following the examples above:
+
+On Mac you would add:
+
+```
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home
+export PATH=$JAVA_HOME/bin/:$PATH
+```
+
+On Linux you would add:
+
+```
+export JAVA_HOME=/usr/lib/jvm/jdk-10.0.2.jdk
+export PATH=$JAVA_HOME/bin/:$PATH
+```
+
+On Windows, similarly, you will also have to configure `JAVA_HOME` and `PATH` to point to openJDK 10. The best way to do this is to set them up as environment variables where:
+
+```
+JAVA_HOME=C:\Program Files\Java\jdk-10.0.2.jdk
+PATH=C:\Program Files\Java\jdk-10.0.2.jdk\bin;%PATH%
+```
+
+If `JAVA_HOME` exists, update it with the new full path to openJDK 10 as shown above. As `PATH` is likely to already exist, simply prepend the full path to `JAVA_HOME\bin` to whatever `PATH` is currently as shown above.
+
+In all cases, you should verify that running `java --version` outputs:
+
+```bash
+$ java --version
+
+openjdk 10.0.2 2018-07-17
+OpenJDK Runtime Environment 18.3 (build 10.0.2+13)
+OpenJDK 64-Bit Server VM 18.3 (build 10.0.2+13, mixed mode)
+```
