@@ -1,6 +1,6 @@
-# Lab 2: Fine-tuning Java images 
+# Lab 2: Fine-tuning Java applications
 
-[Lab 1](../Lab_1.md) goes into detail about how we can choose a base image to reduce our image sizes. This lab will go into more detail into how we can make further optimizations to our image to make them it more efficient.
+[Lab 1](./Lab_1.md) goes into detail about how we can choose a base image to reduce our image sizes. This lab will go into more detail into how we can make further optimizations to our image to make them it more efficient.
 
 ## Class Data Sharing
 
@@ -11,15 +11,16 @@ This feature has been available in Java since JDK 5 and is quite simple to take 
 ### Using the shared archive 
 
 The shared archive can be created simply by running the command:
-`java -Xshare:dump`
+
+```java
+java -Xshare:dump
+```
 
 **NOTE: If this command fail on Linux/Mac you may need to run this command with sudo**
 
 This creates the archive in a file called: `classes.jsa`
 
-By default, Java will use CDS as long as the shared archive exists. If not, it will run as normal. To be explicit, we will simply add the following argument to are `java` command:
-
-`-Xshare:on`
+By default, Java will use CDS as long as the shared archive exists. If not, it will run as normal. To be explicit, we will simply add the argument `-Xshare:on ` to our java command to run the fat jar.
 
 Great, we can now add this to our Dockerfile so our Java containers start faster! Well, let's just start off with seeing how much of a difference CDS has made to our Java application with some simple benchmarking: 
 
@@ -29,7 +30,7 @@ First of all open up a new terminal/console (PowerShell if on Windows).
 
 Now create a new environment variable within the shell that our java application will pick up so we don't get bombarded with logs. (*NOTE: This environment variable will be wiped when you close the shell*): 
 
-`export LOG_LEVEL = OFF`
+`export LOG_LEVEL=OFF`
 
 OR 
 
@@ -40,9 +41,9 @@ Next, make sure that you are in the `java-containers101/docker` directory. To ha
 On Linux/Mac using zsh:
 
 ```bash
-time (repeat 10 {
+time (repeat 10 { \
       java -Xshare:off \
-           -jar java-containers101-1.0-SNAPSHOT.jar --exit
+           -jar java-containers101-1.0-SNAPSHOT.jar --exit \
 })
 ```
 
@@ -59,8 +60,8 @@ Or on Windows using PowerShell:
 
 ```bash
 Measure-Command { foreach ($j in 1..10) {
-      java -Xshare:off \
-           -jar java-containers101-1.0-SNAPSHOT.jar --exit \
+      java -Xshare:off `
+           -jar java-containers101-1.0-SNAPSHOT.jar --exit 
 }}
 ```
 
@@ -75,9 +76,9 @@ Now we can benchmark our application with CDS. In the same shell we can benchmar
 On Linux/Mac using zsh:
 
 ```bash
-time (repeat 10 {
+time (repeat 10 { \
       java -Xshare:on \
-           -jar java-containers101-1.0-SNAPSHOT.jar --exit
+           -jar java-containers101-1.0-SNAPSHOT.jar --exit \
 })
 ```
 
@@ -94,8 +95,8 @@ Or on Windows using PowerShell:
 
 ```bash
 Measure-Command { foreach ($j in 1..10) {
-      java -Xshare:on \
-           -jar java-containers101-1.0-SNAPSHOT.jar --exit \
+      java -Xshare:on `
+           -jar java-containers101-1.0-SNAPSHOT.jar --exit 
 }}
 ```
 
@@ -105,17 +106,28 @@ Looking at the results, you may have found that it is not conclusive that CDS is
 
 ## Application CDS 
 
-Application CDS is exactly what it suggests: it allows us to have Class Data Sharing for our external libraries. Unlike CDS however, Application CDS is only implemented in JDK 10 and above. Similar to before, there are more saving to be won the more application classes are being used and more memory savings as there are more containers sharing the same cache. 
+Application CDS is exactly what it suggests: it allows us to have Class Data Sharing for our external libraries. Unlike CDS however, Application CDS was only available commercially up until JDK 10 (which is why we had install openJDK 10 to play with this feature). Similar to before, there are more saving to be won the more application classes are being used and more memory savings as there are more containers sharing the same cache. 
 
 ### Creating the shared archive 
 
 As Application CDS is dependent on the applciation, there is an extra step we have to run in order to create the list of application classes to include in the archive:
 
-```bash
+On Linux/Mac:
+
+```java
 java -XX:+UseAppCDS \
       -XX:DumpLoadedClassList=classes.lst \
+      -jar java-containers101-1.0-SNAPSHOT.jar --exit 
+```
+
+On Windows using PowerShell:
+
+```java
+java -XX:+UseAppCDS `
+      -XX:DumpLoadedClassList=classes.lst `
       -jar java-containers101-1.0-SNAPSHOT.jar --exit
 ```
+
 
 **NOTE: Once again, if this command fail on Linux/Mac you may need to run this command with sudo**
 
@@ -123,11 +135,23 @@ This will run our application and as each class is loaded, if it can be used in 
 
 Next we can generate the share archive from `classes.lst`:
 
-```bash
+On Linux/Mac:
+
+```java
 java -XX:+UseAppCDS \
       -Xshare:dump \
       -XX:SharedClassListFile=classes.lst \
       -XX:SharedArchiveFile=app-cds.jsa \
+      --class-path java-containers101-1.0-SNAPSHOT.jar
+```
+
+On Windows using PowerShell:
+
+```java
+java -XX:+UseAppCDS `
+      -Xshare:dump `
+      -XX:SharedClassListFile=classes.lst `
+      -XX:SharedArchiveFile=app-cds.jsa `
       --class-path java-containers101-1.0-SNAPSHOT.jar
 ```
 
@@ -164,15 +188,15 @@ done
 Or on Windows using PowerShell:
 
 ```bash
-Measure-Command { foreach ($j in 1..10) { \
-      java -XX:+UseAppCDS \
-           -Xshare:on \
-           -XX:SharedArchiveFile=app-cds.jsa \
-           -jar java-containers101-1.0-SNAPSHOT.jar --exit \
+Measure-Command { foreach ($j in 1..10) { 
+      java -XX:+UseAppCDS `
+           -Xshare:on `
+           -XX:SharedArchiveFile=app-cds.jsa `
+           -jar java-containers101-1.0-SNAPSHOT.jar --exit 
 }}
 ```
 
-We should now see that application does perform slightly better. I was able to shave of 4-5 seconds off the user time for 10 consecutive runs which is about 300-400ms of CPU time every time we start-up our application. Not bad!
+We should now see that application does perform slightly better. I was able to shave of 2-3 seconds off the user time for 10 consecutive runs which is about 200-300ms of CPU time every time we start-up our application. That's not bad but surely we can do better.
 
 ## AOT Compilation
 
