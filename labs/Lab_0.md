@@ -41,7 +41,7 @@ or on Linux:
 or on Windows:
 
 ```
-C:\Program Files\Java\jdk-10.0.2.jdk
+C:\Program Files\Java\jdk-10.0.2
 ```
 
 On Mac or Linux, you can then update your profile (which can be any of the following files depending on your shell: `~/.bashrc`, `~/.bash_profile`, `~/.zshrc`). This will ensure that every time you open a new shell, you will be ready to use this version of Java. Alternatively, you can run these commands directly in the shell. Following the examples above:
@@ -63,8 +63,8 @@ export PATH=$JAVA_HOME/bin/:$PATH
 On Windows, similarly, you will also have to configure `JAVA_HOME` and `PATH` to point to openJDK 10. The best way to do this is to set them up as environment variables where:
 
 ```
-JAVA_HOME=C:\Program Files\Java\jdk-10.0.2.jdk
-PATH=C:\Program Files\Java\jdk-10.0.2.jdk\bin;%PATH%
+JAVA_HOME=C:\Program Files\Java\jdk-10.0.2
+PATH=C:\Program Files\Java\jdk-10.0.2\bin;%PATH%
 ```
 
 If `JAVA_HOME` exists, update it with the new full path to openJDK 10 as shown above. As `PATH` is likely to already exist, simply prepend the full path to `JAVA_HOME\bin` to whatever `PATH` is currently as shown above.
