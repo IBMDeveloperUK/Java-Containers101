@@ -60,8 +60,8 @@ Or on Windows using PowerShell:
 
 ```bash
 Measure-Command { foreach ($j in 1..10) {
-      java -Xshare:off \
-           -jar java-containers101-1.0-SNAPSHOT.jar --exit \
+      java -Xshare:off `
+           -jar java-containers101-1.0-SNAPSHOT.jar --exit 
 }}
 ```
 
@@ -95,8 +95,8 @@ Or on Windows using PowerShell:
 
 ```bash
 Measure-Command { foreach ($j in 1..10) {
-      java -Xshare:on \
-           -jar java-containers101-1.0-SNAPSHOT.jar --exit \
+      java -Xshare:on `
+           -jar java-containers101-1.0-SNAPSHOT.jar --exit 
 }}
 ```
 
@@ -112,11 +112,22 @@ Application CDS is exactly what it suggests: it allows us to have Class Data Sha
 
 As Application CDS is dependent on the applciation, there is an extra step we have to run in order to create the list of application classes to include in the archive:
 
+On Linux/Mac:
+
 ```java
 java -XX:+UseAppCDS \
       -XX:DumpLoadedClassList=classes.lst \
       -jar java-containers101-1.0-SNAPSHOT.jar --exit
 ```
+
+On Windows using PowerShell:
+
+```java
+java -XX:+UseAppCDS `
+      -XX:DumpLoadedClassList=classes.lst `
+      -jar java-containers101-1.0-SNAPSHOT.jar --exit
+```
+
 
 **NOTE: Once again, if this command fail on Linux/Mac you may need to run this command with sudo**
 
@@ -124,11 +135,23 @@ This will run our application and as each class is loaded, if it can be used in 
 
 Next we can generate the share archive from `classes.lst`:
 
+On Linux/Mac:
+
 ```java
 java -XX:+UseAppCDS \
       -Xshare:dump \
       -XX:SharedClassListFile=classes.lst \
       -XX:SharedArchiveFile=app-cds.jsa \
+      --class-path java-containers101-1.0-SNAPSHOT.jar
+```
+
+On Windows using PowerShell:
+
+```java
+java -XX:+UseAppCDS `
+      -Xshare:dump `
+      -XX:SharedClassListFile=classes.lst `
+      -XX:SharedArchiveFile=app-cds.jsa `
       --class-path java-containers101-1.0-SNAPSHOT.jar
 ```
 
@@ -165,11 +188,11 @@ done
 Or on Windows using PowerShell:
 
 ```bash
-Measure-Command { foreach ($j in 1..10) { \
-      java -XX:+UseAppCDS \
-           -Xshare:on \
-           -XX:SharedArchiveFile=app-cds.jsa \
-           -jar java-containers101-1.0-SNAPSHOT.jar --exit \
+Measure-Command { foreach ($j in 1..10) { 
+      java -XX:+UseAppCDS `
+           -Xshare:on `
+           -XX:SharedArchiveFile=app-cds.jsa `
+           -jar java-containers101-1.0-SNAPSHOT.jar --exit 
 }}
 ```
 
