@@ -30,7 +30,7 @@ First of all open up a new terminal/console (PowerShell if on Windows).
 
 Now create a new environment variable within the shell that our java application will pick up so we don't get bombarded with logs. (*NOTE: This environment variable will be wiped when you close the shell*): 
 
-`export LOG_LEVEL = OFF`
+`export LOG_LEVEL=OFF`
 
 OR 
 
