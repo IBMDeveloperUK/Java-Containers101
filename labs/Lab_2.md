@@ -11,7 +11,10 @@ This feature has been available in Java since JDK 5 and is quite simple to take 
 ### Using the shared archive 
 
 The shared archive can be created simply by running the command:
-`java -Xshare:dump`
+
+```java
+java -Xshare:dump
+```
 
 **NOTE: If this command fail on Linux/Mac you may need to run this command with sudo**
 
@@ -19,7 +22,9 @@ This creates the archive in a file called: `classes.jsa`
 
 By default, Java will use CDS as long as the shared archive exists. If not, it will run as normal. To be explicit, we will simply add the following argument to are `java` command:
 
-`-Xshare:on`
+```java
+-Xshare:on
+```
 
 Great, we can now add this to our Dockerfile so our Java containers start faster! Well, let's just start off with seeing how much of a difference CDS has made to our Java application with some simple benchmarking: 
 
@@ -111,7 +116,7 @@ Application CDS is exactly what it suggests: it allows us to have Class Data Sha
 
 As Application CDS is dependent on the applciation, there is an extra step we have to run in order to create the list of application classes to include in the archive:
 
-```bash
+```java
 java -XX:+UseAppCDS \
       -XX:DumpLoadedClassList=classes.lst \
       -jar java-containers101-1.0-SNAPSHOT.jar --exit
@@ -123,7 +128,7 @@ This will run our application and as each class is loaded, if it can be used in 
 
 Next we can generate the share archive from `classes.lst`:
 
-```bash
+```java
 java -XX:+UseAppCDS \
       -Xshare:dump \
       -XX:SharedClassListFile=classes.lst \
