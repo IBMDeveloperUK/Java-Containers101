@@ -1,4 +1,4 @@
-# Lab 2: Fine-tuning Java images 
+# Lab 2: Fine-tuning Java applications
 
 [Lab 1](./Lab_1.md) goes into detail about how we can choose a base image to reduce our image sizes. This lab will go into more detail into how we can make further optimizations to our image to make them it more efficient.
 
