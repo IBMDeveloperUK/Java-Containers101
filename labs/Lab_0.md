@@ -35,7 +35,7 @@ On Mac:
 or on Linux:
 
 ```
-/usr/lib/jvm/jdk-10.0.2.jdk
+/usr/lib/jvm/jdk-10.0.2
 ```
 
 or on Windows:
@@ -56,7 +56,7 @@ export PATH=$JAVA_HOME/bin/:$PATH
 On Linux you would add:
 
 ```
-export JAVA_HOME=/usr/lib/jvm/jdk-10.0.2.jdk
+export JAVA_HOME=/usr/lib/jvm/jdk-10.0.2
 export PATH=$JAVA_HOME/bin/:$PATH
 ```
 
