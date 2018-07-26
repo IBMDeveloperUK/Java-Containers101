@@ -196,7 +196,7 @@ Measure-Command { foreach ($j in 1..10) {
 }}
 ```
 
-We should now see that application does perform slightly better. I was able to shave of 4-5 seconds off the user time for 10 consecutive runs which is about 300-400ms of CPU time every time we start-up our application. Not bad!
+We should now see that application does perform slightly better. I was able to shave of 2-3 seconds off the user time for 10 consecutive runs which is about 200-300ms of CPU time every time we start-up our application. That's not bad but surely we can do better.
 
 ## AOT Compilation
 
