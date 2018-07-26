@@ -20,11 +20,7 @@ java -Xshare:dump
 
 This creates the archive in a file called: `classes.jsa`
 
-By default, Java will use CDS as long as the shared archive exists. If not, it will run as normal. To be explicit, we will simply add the following argument to are `java` command:
-
-```java
--Xshare:on
-```
+By default, Java will use CDS as long as the shared archive exists. If not, it will run as normal. To be explicit, we will simply add the argument `-Xshare:on ` to our `java` command.
 
 Great, we can now add this to our Dockerfile so our Java containers start faster! Well, let's just start off with seeing how much of a difference CDS has made to our Java application with some simple benchmarking: 
 
