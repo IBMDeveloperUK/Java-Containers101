@@ -41,9 +41,9 @@ Next, make sure that you are in the `java-containers101/docker` directory. To ha
 On Linux/Mac using zsh:
 
 ```bash
-time (repeat 10 {
+time (repeat 10 { \
       java -Xshare:off \
-           -jar java-containers101-1.0-SNAPSHOT.jar --exit
+           -jar java-containers101-1.0-SNAPSHOT.jar --exit \
 })
 ```
 
@@ -76,9 +76,9 @@ Now we can benchmark our application with CDS. In the same shell we can benchmar
 On Linux/Mac using zsh:
 
 ```bash
-time (repeat 10 {
+time (repeat 10 { \
       java -Xshare:on \
-           -jar java-containers101-1.0-SNAPSHOT.jar --exit
+           -jar java-containers101-1.0-SNAPSHOT.jar --exit \
 })
 ```
 
@@ -117,7 +117,7 @@ On Linux/Mac:
 ```java
 java -XX:+UseAppCDS \
       -XX:DumpLoadedClassList=classes.lst \
-      -jar java-containers101-1.0-SNAPSHOT.jar --exit
+      -jar java-containers101-1.0-SNAPSHOT.jar --exit 
 ```
 
 On Windows using PowerShell:
