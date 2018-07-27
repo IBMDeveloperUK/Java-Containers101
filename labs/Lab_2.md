@@ -1,6 +1,12 @@
 # Lab 2: Fine-tuning Java applications
 
-[Lab 1](./Lab_1.md) goes into detail about how we can choose a base image to reduce our image sizes. This lab will go into more detail into how we can make further optimizations to our image to make them it more efficient.
+[Lab 1](./Lab_1.md) goes into detail about how we can choose a base image to reduce our image sizes. This lab will go into more detail into how we can make further optimizations to our image to make them it more efficient:
+
+* [Class Data Sharing](#class-data-sharing)
+* [Application CDS](#application-cds)
+* [AOT Compilation](#aot-compilation)
+* [jLink](#jlink)
+* [Updating the Dockerfile](#updating-the-dockerfile)
 
 ## Class Data Sharing
 
@@ -284,6 +290,8 @@ With luck, you will be able to see a drastic increase in start-up time. It was p
 
 ## jLink
 
-The last optimisation we will explore in this lab is jLink
+Another optimistion that we could use to solve the issue of a bloated image size would be to use `jlink` (a feature available since Java 9) to strip the JDK of everything that our application will not use. This relies on the application using the modular system that came with Java 9 or to use the `jdeps` tool and convert automatic dependencies that Spring Boot uses to explicit ones. Either way, this is a task that deserves it's very own workshop!
+
+## Updating the Dockerfile
 
 Congratulations, you have completed Lab 2! Feel free to go [back to the menu](../README.md) to choose another lab.
