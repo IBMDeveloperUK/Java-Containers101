@@ -4,7 +4,7 @@ As we know, to make use of all the features we used in [Lab 2](./Lab_2.md) and [
 
 * [Creating a new Docker Image for memory tests](#Creating-a-new-docker-image-for-memory-tests)
 * [Running with memory constraints](#running-with-memory-constraints)
-* [Java SE support for Docker CPU and memory limits](#running-with-memory-constraints)
+* [Java SE support for Docker CPU and memory limits](#java-se-support-for-docker-cpu-and-memory-limits)
 
 ## Creating a new Docker Image for memory tests 
 
