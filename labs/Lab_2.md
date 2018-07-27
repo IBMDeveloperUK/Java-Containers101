@@ -6,7 +6,7 @@
 * [Application CDS](#application-cds)
 * [AOT Compilation](#aot-compilation)
 * [jLink](#jlink)
-* [Updating the Dockerfile](#updating-the-dockerfile)
+* [Updating the Docker Image](#updating-the-docker-image)
 
 ## Class Data Sharing
 
@@ -292,6 +292,73 @@ With luck, you will be able to see a drastic increase in start-up time. It was p
 
 Another optimistion that we could use to solve the issue of a bloated image size would be to use `jlink` (a feature available since Java 9) to strip the JDK of everything that our application will not use. This relies on the application using the modular system that came with Java 9 or to use the `jdeps` tool and convert automatic dependencies that Spring Boot uses to explicit ones. Either way, this is a task that deserves it's very own workshop!
 
-## Updating the Dockerfile
+## Updating the Docker Image
+
+As we have made all these optimizations to our Java application, we would need to update the Dockerfile to take advantage of these changes. We now run our application with App CDS and AOT so we would need to add these files to the container. The arguments supplied to run our application would also need to be updated. 
+
+As Windows users couldn't use the AOT features and as the AOT shared cache is platform dependent, only Linux users will be able to rebuild the image and successfully run a container using the cache. If you're a Linux user you can follow the next sub-section to rebuild the image using these new features, otherwise go to the next subsection where you will be able to pull the image from Docker Hub.
+
+### Rebuilding the Docker Image
+
+Let's start off by creating a new directory in `java-containers101/docker` called:
+
+```
+openjdk-10-jre-slim-opt
+```
+
+Change directory into `openjdk-10-jre-slim-opt` and create a file called `Dockerfile` with the following contents:
+
+```
+FROM openjdk:10-jre-slim
+EXPOSE 8080
+ADD app-cds.jsa /
+ADD lib.so /
+ADD java-containers101-1.0-SNAPSHOT.jar /
+CMD ["java", "-Xshare:off", "-XX:+UseAppCDS", "-XX:SharedArchiveFile=app-cds.jsa", "-XX:AOTLibrary=./lib.so", "-jar", "java-containers101-1.0-SNAPSHOT.jar"]
+```
+
+Now change directory back to `java-containers101/docker` and run:
+
+```
+docker build -t java-container:openjdk-10-jre-slim-opt -f openjdk-10-jre-slim-opt/Dockerfile .
+```
+
+As before, we can now run our application with the command:
+
+```
+docker run -p 8080:8080 --rm java-container:openjdk-10-jre-slim-opt
+```
+
+Using a browser or in the terminal, we should get the response `pong` when we go `ping` the address:
+
+```
+localhost:8080/ping
+```
+
+### Pulling the Docker Image
+
+If you're unable to build the docker image, you can pull it with the latest changes by running:
+
+```
+docker pull mofesal/java-container:openjdk-10-jre-slim-opt
+```
+
+So that we can remain consistent with the Linux users, let's retag the image:
+
+```
+docker tag mofesal/java-container:openjdk-10-jre-slim-opt java-container:openjdk-10-jre-slim-opt
+```
+
+We can now run the application with the command:
+
+```
+docker run -p 8080:8080 --rm java-container:openjdk-10-jre-slim-opt
+```
+
+Using a browser or in the terminal, we should get the response `pong` when we go `ping` the address:
+
+```
+localhost:8080/ping
+```
 
 Congratulations, you have completed Lab 2! Feel free to go [back to the menu](../README.md) to choose another lab.
