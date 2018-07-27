@@ -11,3 +11,7 @@ Now that you have a bit more understanding around the challenges of running Java
 3. [Lab 2: Fine-tuning Java applications pt1](./labs/Lab_2.md)
 4. [Lab 3: Fine-tuning Java applications pt2](./labs/Lab_3.md)
 5. [Lab 4: Setting container resource constraints](./labs/Lab_4.md)
+
+## Slides
+
+Here is the [slide deck](./slides.pdf) to accompany this workshop. 
