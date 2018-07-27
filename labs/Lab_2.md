@@ -1,6 +1,6 @@
 # Lab 2: Fine-tuning Java applications
 
-[Lab 1](./Lab_1.md) goes into detail about how we can choose a base image to reduce our image sizes. This lab will go into more detail into how we can make further optimizations to our image to make them it more efficient:
+[Lab 1](./Lab_1.md) goes into detail about how we can choose a base image to reduce our image sizes. This lab will go into more detail into how we can make further optimizations to our image to make it more efficient:
 
 * [Class Data Sharing](#class-data-sharing)
 * [Application CDS](#application-cds)
@@ -12,7 +12,7 @@
 
 As [Oracle](https://docs.oracle.com/javase/8/docs/technotes/guides/vm/class-data-sharing.html) explain, *Class data sharing (CDS) helps reduce the startup time for Java programming language applications, in particular smaller applications, as well as reduce footprint. When the JRE is installed using the installer, the installer loads a set of classes from the system jar file into a private internal representation, and dumps that representation to a file, called a "shared archive"... the shared archive is memory-mapped in, saving the cost of loading those classes and allowing much of the JVM's metadata for these classes to be shared among multiple JVM processes.*
 
-This feature has been available in Java since JDK 5 and is quite simple to take advantage of. Continue with this lab to see how to take advantage of CDS with our Java application. 
+This feature has been available in Java since JDK 5 and is quite simple to implement. Let's continue to see how we can use CDS with our Java application.
 
 ### Using the shared archive 
 
@@ -22,7 +22,7 @@ The shared archive can be created simply by running the command:
 java -Xshare:dump
 ```
 
-**NOTE: If this command fail on Linux/Mac you may need to run this command with sudo**
+**NOTE: If this command fails on Linux/Mac you may need to run this command with sudo**
 
 This creates the archive in a file called: `classes.jsa`
 
@@ -134,8 +134,7 @@ java -XX:+UseAppCDS `
       -jar java-containers101-1.0-SNAPSHOT.jar --exit
 ```
 
-
-**NOTE: Once again, if this command fail on Linux/Mac you may need to run this command with sudo**
+**NOTE: Once again, if this command fails on Linux/Mac you may need to run this command with sudo**
 
 This will run our application and as each class is loaded, if it can be used in the archive, Java will add it to the file we specified `classes.lst` (which will be saved in the current directory). This is just a simple list of the slash separated names of each class. 
 
@@ -161,7 +160,7 @@ java -XX:+UseAppCDS `
       --class-path java-containers101-1.0-SNAPSHOT.jar
 ```
 
-**NOTE: Once again, if this command fail on Linux/Mac you may need to run this command with sudo**
+**NOTE: Once again, if this command fails on Linux/Mac you may need to run this command with sudo**
 
 The archive will be produced in the file `app-cds.jsa` in the current directory. As we are creating a cache, we may end up in situations where we update our JAR and use a slightly different combination of external library packages and versions. Using `--class-path` as opposed to `--jar` will help to reduce the risk of strange behaviour due to an expired cache as it verifies that the list of classes in the supplied classpath when running the application is in the same order as it was recorded in the cache. 
 
@@ -296,7 +295,7 @@ Another optimistion that we could use to solve the issue of a bloated image size
 
 As we have made all these optimizations to our Java application, we would need to update the Dockerfile to take advantage of these changes. We now run our application with App CDS and AOT so we would need to add these files to the container. The arguments supplied to run our application would also need to be updated. 
 
-As Windows users couldn't use the AOT features and as the AOT shared cache is platform dependent, only Linux users will be able to rebuild the image and successfully run a container using the cache. If you're a Linux user you can follow the next sub-section to rebuild the image using these new features, otherwise go to the next subsection where you will be able to pull the image from Docker Hub.
+As Windows users couldn't use the AOT features and as the AOT shared cache is platform dependent, only Linux users will be able to rebuild the image and successfully run a container using the cache. If you're a Linux user you can follow the [next sub-section](#rebuilding-the-docker-image) to rebuild the image using these new features, otherwise skip this subsection and the [sub-section after](#pulling-the-docker-image) will give steps to pull the image from Docker Hub.
 
 ### Rebuilding the Docker Image
 
