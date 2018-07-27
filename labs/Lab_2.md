@@ -227,7 +227,7 @@ java -XX:DumpLoadedClassList=classes.lst  \
         -cp ../target/classes:$CP com.ibm.code.java.App --exit
 ```
 
-In this command, we tell java to use the classpath of our application's dependencies along with the `../target/classes` which is where the classes for the code I wrote actually lives. We then specify the main method which is `com.ibm.code.java.App` and the `--exit` flag to stop running immediately after starting-up as we did when we ran with the JAR. As we do this, Java will dump all the classes we use in the file `classes.lst`.
+In this command, we tell java to use the classpath of our application's dependencies along with the directory `../target/classes` which is where the classes for the application code are. We then specify the main method which is `com.ibm.code.java.App` and the `--exit` flag to stop running immediately after starting-up as we did when we ran with the JAR. As we run the application, Java will dump all the classes we use in the file `classes.lst`.
 
 ### Generate the AOT cache (Linux/Mac only)
 
@@ -252,6 +252,32 @@ jaotc --info \
 
 We specify the `--info` flag so that we can see what `jaotc` is doing when we run this command. The AOT cache will be produced in a file called `lib.so`. As we want to run `jaotc` with a classpath, we have to send these paramaters directly to the JVM. To do this, we prepend `-J` to the arguments passed to the JVM which is the classpath flag `-cp` and the value supplied to it `java-containers101-1.0-SNAPSHOT.jar:$CP`. Finally we supply the list of class names and we use sed to replace all slashes with periods.
 
-### Benchmarking our application with AOT
+### Benchmarking our application with AOT and App CDS (Linux/Mac only)
+
+Now that we have created the AOT shared cache, as before, we can benchmark our application with 10 consecutive runs while using AOT. As Application CDS provided some benefit, we will also use it but we will still turn off CDS:
+
+```bash
+time (repeat 10 { \
+      java -Xshare:off \
+           -XX:+UseAppCDS \
+           -XX:SharedArchiveFile=app-cds.jsa \
+           -XX:AOTLibrary=./lib.so \
+           -jar java-containers101-1.0-SNAPSHOT.jar --exit \
+})
+```
+
+Or on Linux/Mac using bash:
+
+```bash
+time for i in {1..10}; do \
+      java -Xshare:off \
+           -XX:+UseAppCDS \
+           -XX:SharedArchiveFile=app-cds.jsa \
+           -XX:AOTLibrary=./lib.so \
+           -jar java-containers101-1.0-SNAPSHOT.jar --exit; \
+done
+```
+
+With luck, you will be able to see a drastic increase in start-up time. It was possible for me to get 50-60s seconds of CPU time shaved off or an average of 5-6s of CPU time every time we start the application using both AppCDS and AOT. Having said this, the trade-off is that we have a cache of over 100MB which we would have to load and store within our application. 
 
 Congratulations, you have completed Lab 2! Feel free to go [back to the menu](../README.md) to choose another lab.
