@@ -39,6 +39,8 @@ OR
 
 `$env:LOG_LEVEL="OFF"` 
 
+Spring will pick up this environment in the [application.properties](../src/main/resources/application.properties) file and turn off all the loggers we are not interested in. 
+
 Next, make sure that you are in the `java-containers101/docker` directory. To have an estimate of how long it takes to start-up our application in consecutive runs, we can run our application without CDS 10 times:
 
 On Linux/Mac using zsh:
