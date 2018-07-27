@@ -163,4 +163,4 @@ Using a browser or in the terminal, we should get the response `pong` when we go
 localhost:8080/ping
 ```
 
-Congratulations, you have completed Lab 3! Feel free to go [back to the menu](../README.md) to choose another lab.
+Congratulations, you have completed Lab 3! Move on to [Lab 4](./Lab_4.md) or go [back to the menu](../README.md).
