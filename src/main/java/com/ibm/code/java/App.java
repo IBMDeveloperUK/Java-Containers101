@@ -36,7 +36,7 @@ public class App {
         System.exit(0);
     }
 
-    public static void memoryTest(){
+    public static void memoryTest() {
         final float MEMORY_CAP = 0.75f;
         final int ONE_MB = 1024 * 1024; 
         List<Object> memoryEater = new ArrayList<>();
@@ -49,15 +49,18 @@ public class App {
 
         LOG.info("Initial free memory: " + freeMemoryBytes/ONE_MB + "MB");
         LOG.info("Maximum memory: " + maxMemoryBytes/ONE_MB + "MB");
-        LOG.info("Available memory: " + cappedBytes/ONE_MB + "MB");
-
-        for (int i = 0; i < cappedBytes / ONE_MB; i++){
-            memoryEater.add(new byte[ONE_MB]);
+        LOG.info("Allocatable memory: " + cappedBytes/ONE_MB + "MB");
+        try{
+            for (int i = 0; i < cappedBytes / ONE_MB; i++){
+                memoryEater.add(new byte[ONE_MB]);
+            }
+    
+            usedMemoryBytes = runtime.totalMemory() - runtime.freeMemory();
+            freeMemoryBytes = runtime.maxMemory() - usedMemoryBytes;
+    
+            LOG.info("Free memory: " + freeMemoryBytes/ONE_MB + "MB");
+        }catch(Exception e){
+            LOG.error(e.getCause().getMessage());
         }
-
-        usedMemoryBytes = runtime.totalMemory() - runtime.freeMemory();
-        freeMemoryBytes = runtime.maxMemory() - usedMemoryBytes;
-
-        LOG.info("Free memory: " + freeMemoryBytes/ONE_MB + "MB");
     }
 }
