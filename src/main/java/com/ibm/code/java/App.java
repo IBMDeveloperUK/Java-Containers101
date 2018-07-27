@@ -3,7 +3,6 @@ package com.ibm.code.java;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 
 import org.jboss.logging.Logger;
 import org.springframework.boot.SpringApplication;
@@ -50,17 +49,18 @@ public class App {
         LOG.info("Initial free memory: " + freeMemoryBytes/ONE_MB + "MB");
         LOG.info("Maximum memory: " + maxMemoryBytes/ONE_MB + "MB");
         LOG.info("Allocatable memory: " + cappedBytes/ONE_MB + "MB");
-        try{
+        
             for (int i = 0; i < cappedBytes / ONE_MB; i++){
-                memoryEater.add(new byte[ONE_MB]);
+                try{
+                    memoryEater.add(new byte[ONE_MB]);
+                }catch(OutOfMemoryError e){
+                    LOG.error("Out of memory: " + e.getMessage());
+                }
             }
     
             usedMemoryBytes = runtime.totalMemory() - runtime.freeMemory();
             freeMemoryBytes = runtime.maxMemory() - usedMemoryBytes;
     
             LOG.info("Free memory: " + freeMemoryBytes/ONE_MB + "MB");
-        }catch(Exception e){
-            LOG.error(e.getCause().getMessage());
-        }
     }
 }
