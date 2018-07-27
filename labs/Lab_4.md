@@ -2,9 +2,9 @@
 
 As we know, to make use of all the features we used in [Lab 2](./Lab_2.md) and [Lab 3](./Lab_3.md), we would need a Java version greater than 9. However the reality is most people still use Java 8 in practice and with [Open J9](https://www.eclipse.org/openj9/) which boasts significant performance enhancements to Java 8, it may make a lot more sense to stay on Java for the time being. This lab however, will explain why until recently, running Java 8 within a container was still problematic when considering resource constraints:
 
-* [Creating a new Docker Image for memory tests](./#Creating-a-new-docker-image-for-memory-tests)
-* [Running with memory constraints](./#running-with-memory-constraints)
-* [Java SE support for Docker CPU and memory limits](./#running-with-memory-constraints)
+* [Creating a new Docker Image for memory tests](#Creating-a-new-docker-image-for-memory-tests)
+* [Running with memory constraints](#running-with-memory-constraints)
+* [Java SE support for Docker CPU and memory limits](#running-with-memory-constraints)
 
 ## Creating a new Docker Image for memory tests 
 
