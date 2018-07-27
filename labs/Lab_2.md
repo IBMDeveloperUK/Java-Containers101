@@ -34,7 +34,7 @@ Now create a new environment variable within the shell that our java application
 
 OR 
 
-`$env:LOG_LEVEL = "OFF"` 
+`$env:LOG_LEVEL="OFF"` 
 
 Next, make sure that you are in the `java-containers101/docker` directory. To have an estimate of how long it takes to start-up our application in consecutive runs, we can run our application without CDS 10 times:
 
@@ -168,7 +168,7 @@ On Linux/Mac using zsh:
 ```bash
 time (repeat 10 { \
       java -Xshare:off \
-           -XX:+UseAppCDS \   
+           -XX:+UseAppCDS \
            -XX:SharedArchiveFile=app-cds.jsa \
            -jar java-containers101-1.0-SNAPSHOT.jar --exit \
 })
@@ -179,7 +179,7 @@ Or on Linux/Mac using bash:
 ```bash
 time for i in {1..10}; do \
       java -Xshare:off \
-           -XX:+UseAppCDS \ 
+           -XX:+UseAppCDS \
            -XX:SharedArchiveFile=app-cds.jsa \
            -jar java-containers101-1.0-SNAPSHOT.jar --exit; \
 done
@@ -188,11 +188,11 @@ done
 Or on Windows using PowerShell:
 
 ```bash
-Measure-Command { foreach ($j in 1..10) { 
+Measure-Command { foreach ($j in 1..10) {
       java -Xshare:off `
-           -XX:+UseAppCDS `     
+           -XX:+UseAppCDS `
            -XX:SharedArchiveFile=app-cds.jsa `
-           -jar java-containers101-1.0-SNAPSHOT.jar --exit 
+           -jar java-containers101-1.0-SNAPSHOT.jar --exit
 }}
 ```
 
