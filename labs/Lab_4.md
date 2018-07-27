@@ -19,8 +19,10 @@ FROM openjdk:8-jre-alpine
 EXPOSE 8080
 ADD java-containers101-1.0-SNAPSHOT.jar /
 ENV LOG_LEVEL=OFF
-CMD ["java", "$JVM_OPTS", "-Xshare:off", "-jar", "java-containers101-1.0-SNAPSHOT.jar", "--memory-test"]
+CMD java $JVM_OPTS -Xshare:off -jar java-containers101-1.0-SNAPSHOT.jar --memory-test
 ```
+
+As we want to be able to resolve `$JVM_OPTS`, we can not use the exec form (string array form) of `CMD`. Instead we use the shell form so we invoke a command shell and then `$JVM_OPTS` will substiute for whatever is passed to it. 
 
 Now change directory back to `java-containers101/docker` and run:
 
@@ -28,10 +30,42 @@ Now change directory back to `java-containers101/docker` and run:
 docker build -t java-container:openjdk-8-jre-alpine-mem -f openjdk-8-jre-alpine-mem/Dockerfile .
 ```
 
-Let's run our application now and see the output:
+## Running with memory constraints
+
+To explain the `--memory-test` configuration in more detail, when we run with this configuration, the inital memory, maximum memory and allocatable memory available to the java process will be printed out. In this mode, the container is set to [only allocate up to 75% of the initial free memory](../src/main/java/com/ibm/code/java/App.java#L47) and will continually eat up 1MB of memory until it reaches the the allocatable memory limit. 
+
+In Docker, it is possible to [set the maximum memory](https://docs.docker.com/engine/reference/run/#user-memory-constraints) that a container can use with the flag `-m` or `--memory`.
+
+Combining Docker's memory limit and this congiuration, we will see how Java _respects_ Docker's memory limits.
+
+Let's run our Dockerized Spring Boot application limiting the memory to "256MB" and see the output:
 
 ```
-docker run -p 8080:8080 --rm java-container:openjdk-8-jre-alpine-mem
+docker run -it -p 8080:8080 --memory=256MB --name=memory-test java-container:openjdk-8-jre-alpine-mem
+```
+
+There are several things wrong with the output we get from this command. Firstly, we can see that the maximum memory available to the container is greater than 256MB and the application seems to think it has way more free memory than it should. Even though the memory that we can allocate to the container is 75% of the initial memory, as the container thinks it has access to more free memory than it should, the allocatable memory is still wrong. In fact, the container thinks it has access to the all the memory available to the host! Also, we didn't `CTRL + C` to detach from the container like before...
+
+Let's run see what the status of the container is:
+
+```
+docker ps -a
+```
+
+So Docker just seemed to exit out of container... Since we specified the name of the container with `--name=memory-test` and didn't run with `--rm` we can still inspect the properties of the container in it's exited state with the reference `memory-test`:
+
+```
+docker inspect --format '{{json .State }}' memory-test
+```
+
+We can actually see that the container was `OOMKilled`. As detailed in the [Docker docs](https://docs.docker.com/config/containers/resource_constraints/#memory), when a container runs out of memory specified by `--memory`, the kernel kills processes in a container which would inevitably result in Docker `OOMKilling` containers in an attempt to stop Docker and more importantly your machine from freezing if containers caused all memory on a VM to be used up. So while our Java process is completely unaware of any memory limits, Docker sees that our container sees that our container has exceeded the 256MB limit and kills our container as it thinks it is out of memory. 
+
+This happens because process isolation is based on cgroups while tools in Linux which get information about the available resources on a machine like `free` and `top` and are based on the `/proc` filesystem were implemented way before cgroups. As a result, they are therefore not _cgroups-aware_. The JVM suffers from the exact same issue when you specify memory constraints and it instead sees the all the available memory on the host. 
+
+The only way to get around this is to actually tell the JVM exactly how much memory it can use with the `-Xmx` variable which by default will [constrain the JVM heap](https://stackoverflow.com/questions/4667483/how-is-the-default-java-heap-size-determined). Let's set it to the same value as our memory limit:
+
+```
+docker run -it -p 8080:8080 -e JVM_ARGS="-Xmx256M" --memory=256MB --name=memory-test java-container:openjdk-8-jre-alpine-mem
 ```
 
 Congratulations, you have completed the workshop! Feel free to go [back to the menu](../README.md) to revist any of the labs.
