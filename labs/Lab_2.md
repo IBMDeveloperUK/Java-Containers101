@@ -200,4 +200,4 @@ Measure-Command { foreach ($j in 1..10) {
 
 We should now see that application does perform slightly better. I was able to shave of 5-6 seconds off the user time for 10 consecutive runs which is about 500-600ms of CPU time every time we start-up our application. That's not bad but surely we can do better.
 
-Congratulations, you have completed Lab 2! Feel free to go [back to the menu](../README.md) to choose another lab.
+Congratulations, you have completed Lab 2! Move on to [Lab 3](./Lab_3.md) or go [back to the menu](../README.md).
