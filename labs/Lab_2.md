@@ -161,14 +161,14 @@ The archive will be produced in the file `app-cds.jsa` in the current directory.
 
 ### Benchmarking our application with Application CDS
 
-Now that we have created the Application CDS, as before, we can benchmark our application with 10 consecutive runs while using Application CDS:
+Now that we have created the Application CDS shared cache, as before, we can benchmark our application with 10 consecutive runs while using Application CDS (NOTE: Although it is possible to use both CDS and App CDS, we will explicitly tell Java not to use CDS as it didn't appear to have any real benefit for our application):
 
 On Linux/Mac using zsh:
 
 ```bash
 time (repeat 10 { \
-      java -XX:+UseAppCDS \
-           -Xshare:on \
+      java -Xshare:off \
+           -XX:+UseAppCDS \   
            -XX:SharedArchiveFile=app-cds.jsa \
            -jar java-containers101-1.0-SNAPSHOT.jar --exit \
 })
@@ -178,8 +178,8 @@ Or on Linux/Mac using bash:
 
 ```bash
 time for i in {1..10}; do \
-      java -XX:+UseAppCDS \
-           -Xshare:on \
+      java -Xshare:off \
+           -XX:+UseAppCDS \ 
            -XX:SharedArchiveFile=app-cds.jsa \
            -jar java-containers101-1.0-SNAPSHOT.jar --exit; \
 done
@@ -189,14 +189,14 @@ Or on Windows using PowerShell:
 
 ```bash
 Measure-Command { foreach ($j in 1..10) { 
-      java -XX:+UseAppCDS `
-           -Xshare:on `
+      java -Xshare:off `
+           -XX:+UseAppCDS `     
            -XX:SharedArchiveFile=app-cds.jsa `
            -jar java-containers101-1.0-SNAPSHOT.jar --exit 
 }}
 ```
 
-We should now see that application does perform slightly better. I was able to shave of 2-3 seconds off the user time for 10 consecutive runs which is about 200-300ms of CPU time every time we start-up our application. That's not bad but surely we can do better.
+We should now see that application does perform slightly better. I was able to shave of 5-6 seconds off the user time for 10 consecutive runs which is about 500-600ms of CPU time every time we start-up our application. That's not bad but surely we can do better.
 
 ## AOT Compilation
 
