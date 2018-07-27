@@ -16,7 +16,7 @@ The JDK contains the JRE and development tools to actually develop Java programs
 
 ## Building Docker Containers
 
-Well that's enough chat, this is a workshop after all! Let's have a little play with the awesome Spring Boot web application   set up for this workshop with two simple routes: `/ping` and `/ping/{delay_in_ms}`. If you haven't already cloned the repo, do so and change directory to:
+Well that's enough chat, this is a workshop after all! Let's have a little play with the awesome Spring Boot web application   set up for this workshop with [a simple route](../src/main/java/com/ibm/code/java/ping/PingController.java): `/ping`. If you haven't already cloned the repo, do so and change directory to:
 
 ```
 java-containers101/docker
