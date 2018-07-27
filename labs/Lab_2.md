@@ -200,4 +200,14 @@ We should now see that application does perform slightly better. I was able to s
 
 ## AOT Compilation
 
+[Ahead of Time compilation](http://openjdk.java.net/jeps/295) allows us to compile a list of Java clases from byte code to native byte code again resulting in quicker start-up times. This works by using a new tool `jaotc` which is available in Java since JDK 9. Similar to App CDS, we will run our application to get a list of classes that our JAR uses during startup. We will then format the list and pass it to the `jaotc` in order to generate a cache that the JVM will use anytime anyone of the classes in the cache is called at startup. 
+
+Unfortunately, this feature is currently limited to Linux x64 systems running 64-bit Java so to all you Windows users, you won't be able to do this on your machines.
+
+### Generate a list of classes
+
+### Generate the AOT cache
+
+### Benchmarking our application with AOT
+
 Congratulations, you have completed Lab 2! Feel free to go [back to the menu](../README.md) to choose another lab.
