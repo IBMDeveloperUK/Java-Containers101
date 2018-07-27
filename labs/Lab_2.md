@@ -70,7 +70,7 @@ Measure-Command { foreach ($j in 1..10) {
 }}
 ```
 
-The `--exit` flag is used to [shutdown the application](../src/main/java/com/ibm/code/java/App.java#L22) as soon as it has finished start-ing up so we don't hang in an interactive shell. This allows us to repeatedly call the application
+The `--exit` flag is used to [shutdown the application](../src/main/java/com/ibm/code/java/App.java#L21) as soon as it has finished start-ing up so we don't hang in an interactive shell. This allows us to repeatedly call the application
 
 For Linux/Mac, we are interested in the `user` output as this gives the CPU time in seconds taken to execute the process (If you were to increase/decrease the number of cores the application could use, the value would be similar in consecutive runs). It's a better value than `total` or `real` as it does not count other processes or time spent blocked. For Windows, we just have to rely on the `TotalSeconds` output which will just give us the elapsed time. Be sure to record these stats somewhere!
 
