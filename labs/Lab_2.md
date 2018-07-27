@@ -256,6 +256,8 @@ We specify the `--info` flag so that we can see what `jaotc` is doing when we ru
 
 Now that we have created the AOT shared cache, as before, we can benchmark our application with 10 consecutive runs while using AOT. As Application CDS provided some benefit, we will also use it but we will still turn off CDS:
 
+Using zsh:
+
 ```bash
 time (repeat 10 { \
       java -Xshare:off \
@@ -266,7 +268,7 @@ time (repeat 10 { \
 })
 ```
 
-Or on Linux/Mac using bash:
+Using bash:
 
 ```bash
 time for i in {1..10}; do \
@@ -278,6 +280,10 @@ time for i in {1..10}; do \
 done
 ```
 
-With luck, you will be able to see a drastic increase in start-up time. It was possible for me to get 50-60s seconds of CPU time shaved off or an average of 5-6s of CPU time every time we start the application using both AppCDS and AOT. Having said this, the trade-off is that we have a cache of over 100MB which we would have to load and store within our application. 
+With luck, you will be able to see a drastic increase in start-up time. It was possible for me to get 50-60s seconds of CPU time shaved off or an average of 5-6s of CPU time every time we start the application using both AppCDS and AOT. Having said this, the trade-off is that we now have a cache of about 150MB which we would have to load and store whenever we deploy our application. 
+
+## jLink
+
+The last optimisation we will explore in this lab is jLink
 
 Congratulations, you have completed Lab 2! Feel free to go [back to the menu](../README.md) to choose another lab.
