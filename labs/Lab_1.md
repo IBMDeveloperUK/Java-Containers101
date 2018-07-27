@@ -16,15 +16,34 @@ The JDK contains the JRE and development tools to actually develop Java programs
 
 ## Building Docker Containers
 
-Well that's enough chat, this is a workshop after all! Let's have a little play with our awesome Spring Boot web application which we have set up with two simple routes: `/ping` and `/ping/{delay_in_ms}`. If you haven't already cloned the repo, do so and `cd java-containers101/docker`. In this directory, we have the spring boot application jar and a list of directories containing a Dockerfile. Each Dockerfile will build a Docker image with a slightly different Java distribution as the base image to run our application. 
+Well that's enough chat, this is a workshop after all! Let's have a little play with the awesome Spring Boot web application   set up for this workshop with two simple routes: `/ping` and `/ping/{delay_in_ms}`. If you haven't already cloned the repo, do so and change directory to:
+
+```
+java-containers101/docker
+``` 
+
+In this directory, we have the spring boot application jar and a list of directories containing a Dockerfile. Each Dockerfile will build a Docker image with a slightly different Java distribution as the base image to run our application. The directory names are named such that you can identify what flavour of Java will be built i.e. version, JDK, JRE etc.
+
+First of all, ensure that Docker is running:
+
+```
+docker images
+```
+
+If it's running you should either see a list of all images you have installed in Docker (which can be empty if you have no images). Once you have ensured that Docker is running you may proceed to building a Docker image from any of the Dockerfile in the current directory.
 
 To build a Docker image from any of these distributions from this directory run:
 
-`docker build -t java-container:<openjdk-distribution> -f <openjdk-distribution>/Dockerfile .`
+```
+docker build -t java-container:<openjdk-distribution> -f <openjdk-distribution>/Dockerfile .
+```
 
 For example, to build the application with `openjdk-8-jre-alpine`, run:
 
-`docker build -t java-container:openjdk-8-jre-alpine -f openjdk-8-jre-alpine/Dockerfile .`
+```
+docker build -t java-container:openjdk-8-jre-alpine -f openjdk-8-jre-alpine/Dockerfile .
+```
+
 Unless you really want to, I'll save you some time and show you what image sizes you should expect for each of the `java-container` images and the `openjdk` images:
 
 ```
@@ -49,9 +68,17 @@ For the sake of time, I have only compared the image sizes with JDK variants wit
 
 Let's build the images for `openjdk-8-jre-alpine` and `openjdk-8-jdk` being the largest and smallest images:
 
-Run:
-`docker build -t java-container:openjdk-8-jre-alpine -f openjdk-8-jre-alpine/Dockerfile .`
-`docker build -t java-container:openjdk-8-jdk -f openjdk-8-jdk/Dockerfile .`
+For `openjdk-8-jre-alpine` run:
+
+```
+docker build -t java-container:openjdk-8-jre-alpine -f openjdk-8-jre-alpine/Dockerfile .
+```
+
+For `openjdk-8-jdk` run:
+
+```
+docker build -t java-container:openjdk-8-jdk -f openjdk-8-jdk/Dockerfile .
+```
 
 ## Running our Java Container 
 
@@ -59,21 +86,49 @@ Now that we have the 2 extremes of our java-container application (openjdk-8-jre
 
 Assuming that port 8080 is free on your machine, run:
 
-`docker run -p 8080:8080 --rm java-container:openjdk-8-jdk`
+```
+docker run -p 8080:8080 --rm java-container:openjdk-8-jdk
+```
 
-If the Spring logs print to the terminal, then you should be able to reach the application on `localhost:8080`. On your browser go to:
+If the Spring logs print to the terminal, then you should be able to reach the application on `localhost:8080`. 
 
-`localhost:8080/ping`
+On your browser go to:
 
-Now lets test to see how the other image performs. To exit the container press the keys: `Ctrl + c`.
+```
+localhost:8080/ping
+```
+
+Or in a new shell/tab/command prompt:
+
+```
+ping localhost:8080/ping
+```
+
+Now lets test to see how the other image performs. To exit the container press the keys: 
+
+```
+Ctrl + c
+```
+
+As we specified `--rm` as a argument to the docker daemon, when we stop the container process, Docker will automatically remove the container so this will clean up after us automatically.
 
 Now let's run the smaller version of the application:
 
-`docker run -p 8080:8080 --rm java-container:openjdk-8-jre-alpine`
+```
+docker run -p 8080:8080 --rm java-container:openjdk-8-jre-alpine
+```
 
 Again, on your browser go to:
 
-`localhost:8080/ping`
+```
+localhost:8080/ping
+```
+
+Or in a new shell/tab/command prompt:
+
+```
+ping localhost:8080/ping
+```
 
 So from the assumption of just running our Java applications, there is no need to have such a big distribution. In fact in the Serverless world, Java applications are pretty much ignored as a use case because of the large overhead. For now, Java 8 JRE alpine remains a very attractive distribution but we have to remember that this will eventually lose support. 
 
