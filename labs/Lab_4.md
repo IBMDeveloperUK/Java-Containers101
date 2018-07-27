@@ -109,7 +109,7 @@ Let's clean up after ourselves:
 docker rm memory-test
 ```
 
-Before this change in Java, it was very impractical to run Docker within a container. Imagine not having mutiple containers all on one host thinking they have access to all the host's resources! If they did actually use a lot of memory, you would enter a world of pain as your containers would all fight for memory and to survive. 
+Before this change in Java, it was very impractical to run Docker within a container. Imagine not knowing you needed to specify resource limits twice and having mutiple containers all on one host thinking they have access to all the host's resources! If they did actually use a lot of memory, you would enter a world of pain as your containers would all fight for memory and to survive. 
 
 Regardless, I hope I have showed you some of the considerations and thought that goes into running Java applciations within containers.
 
