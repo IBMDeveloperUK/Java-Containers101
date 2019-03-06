@@ -47,7 +47,7 @@ JAVA_HOME=C:\Program Files\Java\JAVA_VERSION
 PATH=C:\Program Files\Java\JAVA_VERSION\bin;%PATH%
 ```
 
-If `JAVA_HOME` exists, update it with the new full path to openJDK 10 as shown above. As `PATH` is likely to already exist, simply prepend the full path to `JAVA_HOME\bin` to whatever `PATH` is currently as shown above.
+If `JAVA_HOME` exists, update it with the new full path to Adopt OpenJDK 11 as shown above. As `PATH` is likely to already exist, simply prepend the full path to `JAVA_HOME\bin` to whatever `PATH` is currently as shown above.
 
 In all cases, you should verify that running `java --version` outputs:
 
