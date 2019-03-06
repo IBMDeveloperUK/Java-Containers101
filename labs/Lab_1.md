@@ -4,15 +4,15 @@ When creating a Java container, quite a bit of consideration should go into buil
 
 ## JDK versions
 
-In terms of Java versions, there are many options. Most Java applications currently use Java 8, however 9, 10 and the early release of 11 are also viable options with native support for containers built into Java from JDK 10. At the same time, with [Java's new 6 month release cadence for Java](https://blogs.oracle.com/java-platform-group/update-and-faq-on-the-java-se-release-cadence), Oracle recommend not using the older versions once the newer versions are avialable and will stop supporting these versions once the newer versions GA. This means as of now, there is no incentive for anyone to use Java 9 as 10 is available and when 11 GAs it will be the same for 10. This obviouly concerns businesses with large legacy systems and may put people off from using anything but Java 8 until they are forced to. 
+In terms of Java versions, it seems to be unclear what version of Java to pick with the [6 month release cadence for Java](https://blogs.oracle.com/java-platform-group/update-and-faq-on-the-java-se-release-cadence), Oracle recommend not using the older versions once the newer versions are avialable and will stop supporting these versions once the newer versions GA. This means as of now, there is no incentive for anyone to use Java 9 or 10. Version 8 and 11 are exceptions to this rule as they have been marked for Long Term Support and different vendors will agree to support these versions beyond Oracle's 6 month support period. 
 
-## OpenJDK vs Oracle
+## Free as in beer vs. Free as in speech
 
-There is also the argument about the licensing around Oracle build of Java. By using an Oracle build of Java means that you accept their licensing agreement to not re-distribute the JDK which includes pushing your built images that contains the Oracle JDK to a private/public repository. Nevertheless, it is possible to redistribute the Dockerfiles which use the Oracle JDK but most customers will want the built end product i.e. the image. In this case, you would choose OpenJDK builds over Oracle builds. 
+There is also the argument about the licensing around Oracle build of Java. Oracle licenses Java under several license. Although free to use for development purposes (free as in beer), you are not free to redistribute the Oracle JDK, which makes even things like storing custom built images in private/public repository. Other vendors however such as AdoptOpenJDK allow you to use their software and do whatever you wish (free as in speech). 
 
-## Full JDK vs. JRE vs. Streamlined variants 
+## Full JDK vs. Streamlined variants 
 
-The JDK contains the JRE and development tools to actually develop Java programs. In most cases you don't want to develop Java within a container, you simply want to run the end product (JAR / WAR) file. In this case, why choose a full JDK over a JRE? Choosing a full JDK will just mean that you will have a bigger image size, so it will take longer to build, pull and update your images. There has been additional work to make Java run on smaller linux distributions such as Alpine Linux to further decrease the image size and other slim variants (all available OpenJDK tags for different versions can be found [here](https://hub.docker.com/_/openjdk/))
+The JDK contains the JRE and development tools to actually develop Java programs. In most cases you don't want to develop Java within a container, you simply want to run the end product (JAR / WAR) file. In this case, why choose a full JDK over a more streamlined version to just run your application? Choosing a full JDK will just mean that you will have a bigger image size, so it will take longer to build, pull and update your images. There has been additional work to make Java run on smaller linux distributions such as Alpine Linux to further decrease the image size and other slim variants (all available AdoptOpenJDK tags for different versions can be found [here](https://hub.docker.com/r/adoptopenjdk/openjdk11))
 
 ## Building Docker Containers
 
@@ -22,7 +22,7 @@ Well that's enough chat, this is a workshop after all! Let's have a little play 
 java-containers101/docker
 ``` 
 
-In this directory, we have the spring boot application jar and a list of directories containing a Dockerfile. Each Dockerfile will build a Docker image with a slightly different Java distribution as the base image to run our application. The directory names are named such that you can identify what flavour of Java will be built i.e. version, JDK, JRE etc.
+In this directory, we have the spring boot application jar and a list of directories containing a Dockerfile. Each Dockerfile will build a Docker image with a slightly different Java distribution as the base image to run our application. The directory names are named such that you can identify what variant of Java will be built.
 
 First of all, ensure that Docker is running:
 
@@ -35,59 +35,66 @@ If it's running you should either see a list of all images you have installed in
 To build a Docker image from any of these distributions from this directory run:
 
 ```
-docker build -t java-container:<openjdk-distribution> -f <openjdk-distribution>/Dockerfile .
+docker build -t java-container:<adopt-openjdk-distribution> -f <adopt-openjdk-distribution>/Dockerfile .
 ```
 
-For example, to build the application with `openjdk-8-jre-alpine`, run:
+For example, to build the application with `adoptopenjdk-8-alpine-slim`, run:
 
 ```
-docker build -t java-container:openjdk-8-jre-alpine -f openjdk-8-jre-alpine/Dockerfile .
+docker build -t java-container:adoptopenjdk-8-alpine-slim -f adoptopenjdk-8-alpine-slim/Dockerfile .
 ```
 
-Unless you really want to, I'll save you some time and show you what image sizes you should expect for each of the `java-container` images and the `openjdk` images:
+Unless you really want to, I'll save you some time and show you what image sizes you should expect for each of the `java-container` images and the `adoptopenjdk` images:
 
 ```
 $ docker images
 
 REPOSITORY          TAG                    IMAGE ID            CREATED             SIZE
-java-container      openjdk-8-jdk-slim     e0ccf3a5f937        8 minutes ago       260MB
-java-container      openjdk-8-jdk          8cba3e53ba70        9 minutes ago       640MB
-java-container      openjdk-8-jre-alpine   58b18734a9f9        13 minutes ago      99.1MB
-java-container      openjdk-8-jre-slim     b5ef03ed2047        14 minutes ago      220MB
-java-container      openjdk-11-jre-slim    7bf1eb0dd942        15 minutes ago      295MB
-java-container      openjdk-10-jre-slim    4cd9988db5f9        15 minutes ago      307MB
-openjdk             10-jre-slim            b4e0d5346a45        2 days ago          291MB
-openjdk             11-jre-slim            64f969436dfe        2 days ago          279MB
-openjdk             8-jre-slim             578940672555        6 days ago          204MB
-openjdk             8-jdk-slim             60575d4bfe64        6 days ago          244MB
-openjdk             8-jdk                  8c80ddf988c8        6 days ago          624MB
-openjdk             8-jre-alpine           ccfb0c83b2fe        12 days ago         83MB
+adoptopenjdk/openjdk8-openj9    alpine-slim                          253e3e59f633        42 hours ago        84.8MB
+java-container                  adoptopenjdk-11-openj9-alpine-slim   b48ab042240c        44 hours ago        259MB
+adoptopenjdk/openjdk11-openj9   alpine-slim                          52ca855326f8        2 days ago          243MB
+java-container                  adoptopenjdk-8-slim                  00ebc71a5514        5 days ago          211MB
+java-container                  adoptopenjdk-8-alpine-slim           ce0969af8311        5 days ago          87MB
+java-container                  adoptopenjdk-8-alpine                7051f904cc54        5 days ago          234MB
+java-container                  adoptopenjdk-8-jdk                   b110eb9af0ce        5 days ago          342MB
+java-container                  adoptopenjdk-11-jdk                  2bb67cfef0cd        5 days ago          458MB
+java-container                  adoptopenjdk-11-slim                 f352ceb124f4        5 days ago          383MB
+java-container                  adoptopenjdk-11-alpine-slim          c6189cb8b7b9        5 days ago          259MB
+java-container                  adoptopenjdk-11-alpine               48b8442e7df1        5 days ago          350MB
+adoptopenjdk/openjdk11          alpine-slim                          3b277a441622        6 days ago          243MB
+adoptopenjdk/openjdk11          alpine                               46fe565525a9        6 days ago          334MB
+adoptopenjdk/openjdk11          slim                                 027ff41ec7af        6 days ago          367MB
+adoptopenjdk/openjdk11          latest                               0c05f58fcc03        6 days ago          442MB
+adoptopenjdk/openjdk8           alpine-slim                          48ba92fa4ad0        6 days ago          70.8MB
+adoptopenjdk/openjdk8           alpine                               206aaaea0bff        6 days ago          218MB
+adoptopenjdk/openjdk8           slim                                 e6851f197559        6 days ago          195MB
+adoptopenjdk/openjdk8           latest                               e78f1e7bf68c        6 days ago          326MB
 ```
 
-For the sake of time, I have only compared the image sizes with JDK variants with Java 8 but for all versions it holds true that for image sizes JDK > JDK Slim > JRE > JRE Slim. Also comparing the `java-container` with the image size for its corresponding openJDK version, the overhead of the actual application is constant. In this case, it is always 16MB. 
+For the sake of time, I have only compared the image sizes with JDK variants with Java 8 but for all versions it holds true that for image sizes jdk > slim > alpine > alpine-slim. Also comparing the `java-container` with the image size for its corresponding AdoptOpenJDK version, the overhead of the actual application is constant. In this case, it is always 16MB. 
 
-Let's build the images for `openjdk-8-jre-alpine` and `openjdk-8-jdk` being the largest and smallest images:
+Let's build the images for `adoptopenjdk-8-alpine-slim` and `adoptopenjdk-11-jdk` being the smallest and largest images:
 
-For `openjdk-8-jre-alpine` run:
-
-```
-docker build -t java-container:openjdk-8-jre-alpine -f openjdk-8-jre-alpine/Dockerfile .
-```
-
-For `openjdk-8-jdk` run:
+For `adoptopenjdk-8-alpine-slim` run:
 
 ```
-docker build -t java-container:openjdk-8-jdk -f openjdk-8-jdk/Dockerfile .
+docker build -t java-container:adoptopenjdk-8-alpine-slim -f adoptopenjdk-8-alpine-slim/Dockerfile .
+```
+
+For `adoptopenjdk-11-jdk ` run:
+
+```
+docker build -t java-container:adoptopenjdk-11-jdk  -f adoptopenjdk-11-jdk/Dockerfile .
 ```
 
 ## Running our Java Container 
 
-Now that we have the 2 extremes of our java-container application (openjdk-8-jre-alpine and openjdk-8-jdk), we can test if our application runs:
+Now that we have the 2 extremes of our java-container application (adoptopenjdk-8-alpine-slim and adoptopenjdk-11-jdk), we can test if our application runs:
 
 Assuming that port 8080 is free on your machine, run:
 
 ```
-docker run -p 8080:8080 --rm java-container:openjdk-8-jdk
+docker run -p 8080:8080 --rm java-container:adoptopenjdk-11-jdk
 ```
 
 If the Spring logs print to the terminal, then you should be able to reach the application on `localhost:8080`. 
@@ -115,7 +122,7 @@ As we specified `--rm` as a argument to the docker daemon, when we stop the cont
 Now let's run the smaller version of the application:
 
 ```
-docker run -p 8080:8080 --rm java-container:openjdk-8-jre-alpine
+docker run -p 8080:8080 --rm java-container:adoptopenjdk-8-alpine-slim
 ```
 
 Again, on your browser go to:
@@ -130,6 +137,6 @@ Or in a new shell/tab/command prompt:
 ping localhost:8080/ping
 ```
 
-So from the assumption of just running our Java applications, there is no need to have such a big distribution. In fact in the Serverless world, Java applications are pretty much ignored as a use case because of the large overhead. For now, Java 8 JRE alpine remains a very attractive distribution but we have to remember that this will eventually lose support. 
+So from the assumption that we only need to have a runtime for our Java applications, there is no need to have such a big distribution.
 
 Congratulations, you have completed Lab 1! Move on to [Lab 2](./Lab_2.md) or go [back to the menu](../README.md).
