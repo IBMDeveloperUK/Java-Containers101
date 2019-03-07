@@ -3,6 +3,7 @@
 In [Lab 2](./Lab_2.md), we covered CDS and Application CDS as two ways to make our Java applications more performant, but we found that we received no benefit from CDS and not a lot of benefit from Application CDS. In this lab we will look at two other ways of increasing performance before finally making these changes back to our container. 
 
 * [AOT Compilation](#aot-compilation)
+* [Open J9](#openj9)
 * [jLink](#jlink)
 * [Updating the Docker Image](#updating-the-docker-image)
 
@@ -88,7 +89,34 @@ time for i in {1..10}; do \
 done
 ```
 
-With luck, you will be able to see a drastic increase in start-up time. It was possible for me to get 50-60s seconds of CPU time shaved off or an average of 5-6s of CPU time every time we start the application using both AppCDS and AOT. Having said this, the trade-off is that we now have a cache of about 150MB which we would have to load and store whenever we deploy our application. One important takeaway from this lab is that every application is different and depending on the number and type of dependencies you use, the combination of these different features you decide to use will vary according to how well they perform and the cost of using them. Even though our application starts up a lot faster now, if you're more concerned about image sizes, you will be more inclined to not use AOT to save 150MB within the Docker image.
+With luck, you will be able to see a drastic increase in start-up time. ~~It was possible for me to get 50-60s seconds of CPU time shaved off or an average of 5-6s of CPU time every time we start the application using both AppCDS and AOT~~. Now that Java 11 has been released using AOT only seemed to have around a ~150ms improvement over not using it. Regardless of performance, the trade-off is that we now have a cache of about 150MB which we would have to load and store whenever we deploy our application. One important takeaway from this lab is that every application is different and depending on the number and type of dependencies you use, the combination of these different features you decide to use will vary according to how well they perform and the cost of using them. If you're more concerned about image sizes, you will be more inclined to not use AOT to avoid the 150MB overhead it adds to the image.
+
+## Open J9
+
+[Open J9](https://www.eclipse.org/openj9/) is a project that was contributed by IBM to the Eclipse Foundation in 2017 based of the alternative proprietary JVM V9. This alternative JVM boasts “low memory footprint” & “fast start-up time” with its own CDS and AOT implementations also included. 
+
+AdoptOpenJDK also provide these builds as Docker images for both versions 8 and 11 and with the same variants as we saw before (jdk, slim, alpine, alpine-slim).
+
+To make use of it's CDS and AOT functions, unlike the HotSpot VMs, we don't have to create cache's. The JVM automatically chooses the classes to optimize which is a huge benefit for keeping the image size down. To test how this performs, you will  first need to download and install the [OpenJ9 variant](https://adoptopenjdk.net/?variant=openjdk8&jvmVariant=openj9) of AdoptopenJDK.
+
+```
+openjdk version "1.8.0_202"
+OpenJDK Runtime Environment (build 1.8.0_202-b08)
+Eclipse OpenJ9 VM (build openj9-0.12.1, JRE 1.8.0 Mac OS X amd64-64-Bit Compressed References 20190205_147 (JIT enabled, AOT enabled)
+OpenJ9   - 90dd8cb40
+OMR      - d2f4534b
+JCL      - d002501a90 based on jdk8u202-b08)
+```
+
+The Java 8 variant of OpenJ9 is esteemed to be more performant than Java 11 so we have chosen this version. You can now run the jar with the following flags:
+
+```
+java -Xshareclasses -Xtune:virtualized -jar java-containers101-1.0-SNAPSHOT.jar
+```
+
+The `-Xshareclasses` flag allows us to make use of OpenJ9's CDS implementation while `-Xtune:virtualized` allows us to use it's AOT features. Note how with both options we do not have to create or specify a cache which means our resultant images are a lot smaller in size!
+
+When coming to test these features, I was able to shave of an entire second from the applications start-up time!
 
 ## jLink
 
@@ -105,56 +133,28 @@ As Windows users couldn't use the AOT features and as the AOT shared cache is pl
 Let's start off by creating a new directory in `java-containers101/docker` called:
 
 ```
-openjdk-10-jre-slim-opt
+aadoptopenjdk-8-openj9-alpine-slim-opt
 ```
 
-Change directory into `openjdk-10-jre-slim-opt` and create a file called `Dockerfile` with the following contents:
+Change directory into `adoptopenjdk-8-openj9-alpine-slim-opt` and create a file called `Dockerfile` with the following contents:
 
 ```
-FROM openjdk:10-jre-slim
+FROM adoptopenjdk/openjdk8-openj9:alpine-slim
 EXPOSE 8080
-ADD app-cds.jsa /
-ADD lib.so /
 ADD java-containers101-1.0-SNAPSHOT.jar /
-CMD ["java", "-Xshare:off", "-XX:+UseAppCDS", "-XX:SharedArchiveFile=app-cds.jsa", "-XX:AOTLibrary=./lib.so", "-jar", "java-containers101-1.0-SNAPSHOT.jar"]
+CMD ["java", "-Xshareclasses", "-Xtune:virtualized", "-jar", "java-containers101-1.0-SNAPSHOT.jar"]
 ```
 
 Now change directory back to `java-containers101/docker` and run:
 
 ```
-docker build -t java-container:openjdk-10-jre-slim-opt -f openjdk-10-jre-slim-opt/Dockerfile .
+docker build -t java-container:adoptopenjdk-8-alpine-slim-opt -f adoptopenjdk-8-alpine-slim-opt/Dockerfile .
 ```
 
 As before, we can now run our application with the command:
 
 ```
-docker run -p 8080:8080 --rm java-container:openjdk-10-jre-slim-opt
-```
-
-Using a browser or in the terminal, we should get the response `pong` when we go `ping` the address:
-
-```
-localhost:8080/ping
-```
-
-### Pulling the Docker Image
-
-If you're unable to build the docker image, you can pull it with the latest changes by running:
-
-```
-docker pull mofesal/java-container:openjdk-10-jre-slim-opt
-```
-
-So that we can remain consistent with the Linux users, let's retag the image:
-
-```
-docker tag mofesal/java-container:openjdk-10-jre-slim-opt java-container:openjdk-10-jre-slim-opt
-```
-
-We can now run the application with the command:
-
-```
-docker run -p 8080:8080 --rm java-container:openjdk-10-jre-slim-opt
+docker run -p 8080:8080 --rm java-container:adoptopenjdk-8-openj9-alpine-slim-opt
 ```
 
 Using a browser or in the terminal, we should get the response `pong` when we go `ping` the address:
