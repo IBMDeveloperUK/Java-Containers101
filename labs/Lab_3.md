@@ -3,7 +3,7 @@
 In [Lab 2](./Lab_2.md), we covered CDS and Application CDS as two ways to make our Java applications more performant, but we found that we received no benefit from CDS and not a lot of benefit from Application CDS. In this lab we will look at two other ways of increasing performance before finally making these changes back to our container. 
 
 * [AOT Compilation](#aot-compilation)
-* [Open J9](#openj9)
+* [Open J9](#open-j9)
 * [jLink](#jlink)
 * [Updating the Docker Image](#updating-the-docker-image)
 
